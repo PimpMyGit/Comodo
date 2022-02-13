@@ -111,7 +111,7 @@ def wchoesion(wv_model, words):
 Distance Matrix
 """
 
-def dist_matrix(values1, values2=[], lambda_fun=lambda x,y: abs(x-y), norm=True, print_plot=True, fsize=None, title=''):
+def dist_matrix(values1, values2=[], lambda_fun=lambda x,y: abs(x-y), transform=lambda mat: LIST.normalize(mat), print_plot=True, fsize=None, title=''):
     matrix=[]
     two_sets = True
     if len(values2) == 0:
@@ -122,18 +122,18 @@ def dist_matrix(values1, values2=[], lambda_fun=lambda x,y: abs(x-y), norm=True,
         for v2 in values2:
             row.append(lambda_fun(v1, v2))
         matrix.append(row)
-    if norm:
+    if type(transform) is type(lambda x:x):
         vlen = len(matrix[0])
-        flat_matrix = LIST.normalize(list(np.array(matrix).reshape(-1)))
+        flat_matrix = transform(list(np.array(matrix).reshape(-1)))
         matrix = list(LIST.reshape(flat_matrix, cols=vlen))
     if print_plot:
         PLT.heatmap(LIST.nparr(matrix), fsize=fsize, title=title)
     return {'matrix': matrix, 'values': {'rows':values1, 'cols':values2} if two_sets else values1}
 
-def sort_dist_matrix(dist_matrix, method='complete', initial_values=[], norm=False, print_plot=True, fsize=None, title=''):
-    if norm:
+def sort_dist_matrix(dist_matrix, method='complete', initial_values=[], transform=lambda mat: LIST.normalize(mat), print_plot=True, fsize=None, title=''):
+    if type(transform) is type(lambda x:x):
         vlen = len(dist_matrix[0])
-        flat_matrix = LIST.normalize(LIST.flat(dist_matrix))
+        flat_matrix = transform(LIST.flat(dist_matrix))
         dist_matrix = list(np.array(flat_matrix).reshape(int(len(flat_matrix)/vlen),vlen))
     if int(dist_matrix[0][0]) == 1:
         dist_matrix = [[(1-v) for v in row] for row in dist_matrix]
