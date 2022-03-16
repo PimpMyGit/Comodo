@@ -83,13 +83,13 @@ def reshape(l, rows=None, cols=None, axis=0):
         return False
     elif (rows!=None and cols==None):
         if len(l)%rows != 0:
-            UTILS.throw_msg('error', 'can\'t create ' + str(rows) + ' rows. List length: ' + str(len(l)), + ' reminder: ' + str(len(l)%rows))
+            UTILS.throw_msg('error', 'can\'t create ' + str(rows) + ' rows. List length: ' + str(len(l)) + ' reminder: ' + str(len(l)%rows))
             return False
         else:
             reshaped_l = reshape(l, rows, int(len(l)/rows))
     elif (rows==None and cols!=None):
         if len(l)%cols != 0:
-            UTILS.throw_msg('error', 'can\'t create ' + str(cols) + ' columns. List length: ' + str(len(l)), + ' reminder: ' + str(len(l)%cols))
+            UTILS.throw_msg('error', 'can\'t create ' + str(cols) + ' columns. List length: ' + str(len(l)) + ' reminder: ' + str(len(l)%cols))
             return False
         else:
             reshaped_l = reshape(l, int(len(l)/cols), cols)

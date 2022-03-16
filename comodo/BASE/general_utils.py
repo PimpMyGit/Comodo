@@ -68,13 +68,25 @@ def warning_on():
 
 #-----------------------------------------------------------------------------#
 
-def tryex(lambda_do, ex, lambda_catch, lambda_final):
+def try_ex(lambda_do, ex, lambda_catch, lambda_final):
     try:
         lambda_do()
     except LIST.lvalues(ex):
         lambda_catch()
     if (lambda_final):
         lambda_final()
+
+def try_pass(lambda_do, ):
+    try:
+        lambda_do()
+    except:
+        pass
+
+def try_default(lambda_do, default=None, *lambda_params):
+    try:
+        return lambda_do(*lambda_params)
+    except:
+        return default
     
 #-----------------------------------------------------------------------------#
 
@@ -98,8 +110,10 @@ def lambda_vsafe(element, lambda_fun):
     return ret if not ret is None else element
 
 def lambda_seq(*params, lseq=[]):
-    lout, lfuns = (list(lseq.keys()), list(lseq.values())) if type(lseq) is dict else ([n for n in range(lseq)], lseq)
-    return {lo: lf(*params) for lo,lf in zip(lout,lfuns)}
+    lseq_type = type(lseq)
+    lseq = lseq if lseq_type is dict or lseq_type is list else LIST.lvalues(lseq)
+    lout, lfuns = (list(lseq.keys()), list(lseq.values())) if type(lseq) is dict else ([n for n in range(len(lseq))], lseq)
+    return {lo: lf(*params) for lo,lf in zip(lout,lfuns)} if lseq_type is dict else LIST.lvalue([lf(*params) for lf in lfuns])
 
 def lambda_pipe(element, lpipe):
     lpipe = LIST.lvalues(lpipe)
@@ -336,10 +350,13 @@ def index_of(s, element, mode='first'):
         return len(s)-rs.index(element)-1 if element in rs else -1
     elif mode == 'all':
         idxs = []
+        delta = 0
         while element in s:
             idx = s.index(element)
-            idxs.append(idx)
+            idxs.append(idx+delta)
+            delta = delta + idx+len(element)
             s = s[idx+len(element):]
+        return idxs
     else:
         UTILS.throw_msg('error', 'Mode must be one of \'first\' (default), \'last\' or \'all\'')
 

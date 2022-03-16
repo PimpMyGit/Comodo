@@ -175,6 +175,109 @@ OBJECTS = _OBJECTS()
 
 ###############################################################################
 
+import html
+import re
+
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+class _LAMBDAS:
+    """
+    Costant execution functios / routines
+    """
+
+    _LAMBDAS_DICT = {
+
+        '_TXT_TEXT_NORMALIZATION_STEPS': {
+            'LOWER':            lambda s:   s.lower(),                                                                  # Minuscolo grazie, microfono fibra, ah
+            'DECODE_HTML':      lambda s:   html.unescape(s),                                                           # Caratteri speciali
+            'NO_URL':           lambda s:   re.sub(r'https?://\S+|www.\.\S+', '', s),                                   # No urls
+            'NO_EMOJI':         lambda s:   UTILS.one_space(re.compile("["                                              # No emoticon
+                                                        u"\U0001F600-\U0001F64F" 
+                                                        u"\U0001F300-\U0001F5FF" 
+                                                        u"\U0001F680-\U0001F6FF" 
+                                                        u"\U0001F1E0-\U0001F1FF" 
+                                                        u"\U00002500-\U00002BEF" 
+                                                        u"\U00002702-\U000027B0"
+                                                        u"\U00002702-\U000027B0"
+                                                        u"\U000024C2-\U0001F251"
+                                                        u"\U0001f926-\U0001f937"
+                                                        u"\U00010000-\U0010ffff"
+                                                        u"\u2640-\u2642"
+                                                        u"\u2600-\u2B55"
+                                                        u"\u200d"
+                                                        u"\u23cf"
+                                                        u"\u23e9"
+                                                        u"\u231a"
+                                                        u"\ufe0f"
+                                                        u"\u3030"
+                                                        "]+", flags=re.UNICODE).sub(r' ', s)),
+            'NO_ESCAPE':        lambda s:   UTILS.one_space(UTILS.str_replace(s, {'\n':' ', '\r':' ', '\t':' '})),      # Cursori vari
+            'NO_PUNCTUATION':   lambda s:   UTILS.one_space(UTILS.str_replace(s, {                                      # Punteggiatura
+                                                                                    '!'     :   ' ',
+                                                                                    '"'     :   ' ',
+                                                                                    '#'     :   ' ',
+                                                                                    '$'     :   ' ',
+                                                                                    '%'     :   ' ',
+                                                                                    '&'     :   ' ',
+                                                                                    '\''    :   '\'',
+                                                                                    '('     :   ' ',
+                                                                                    ')'     :   ' ',
+                                                                                    '*'     :   ' ',
+                                                                                    '+'     :   ' ',
+                                                                                    ','     :   ' ',
+                                                                                    '’'     :   ' ',
+                                                                                    '”'     :   ' ',
+
+                                                                                    ' - '   :   ' ',
+                                                                                    '- '    :   ' ', 
+                                                                                    ' -'    :   ' ',
+                                                                                    '-'     :   '_',
+
+                                                                                    '/'     :   ' ',
+                                                                                    ':'     :   ' ',
+                                                                                    ';'     :   ' ',
+                                                                                    '<'     :   ' ',
+                                                                                    '='     :   ' ',
+                                                                                    '>'     :   ' ',
+                                                                                    '?'     :   ' ',
+                                                                                    '['     :   ' ',
+                                                                                    '\''    :   ' ',
+                                                                                    ']'     :   ' ',
+                                                                                    '^'     :   ' ',
+                                                                                    '_'     :   ' ',
+                                                                                    '`'     :   ' ',
+                                                                                    '{'     :   ' ',
+                                                                                    '|'     :   ' ',
+                                                                                    '}'     :   ' ',
+                                                                                    '~'     :   ' ',
+                                                                                })),
+            'NO_NUMBERS':       lambda s:   UTILS.one_space(re.sub(r'(\d\d*\.?)+', ' ', s)),                            # Numeri
+            'NO_ELLIPSIS':      lambda s:   UTILS.one_space(re.sub(r'\.{2,}', '. ', s)),                                # Puntini di sospensione
+        },
+
+        '_TXT_TEXT_TOKENIZATION_STEPS': {
+            'SENTENCE':     lambda text:    sent_tokenize(text),
+            'WORD':         lambda sentences:   [word_tokenize(sentence) if type(sentence) is str and len(sentence)>0 else None for sentence in sentences]
+        }
+
+    }
+
+    def __init__(self):
+        self._configure()
+
+    def _configure(self):
+        for k,v in self._LAMBDAS_DICT.items():
+            self.add_lambda(k,v)
+
+    def add_lambda(self, name, value):
+        self.__dict__[name] = value
+
+#-----------------------------------------------------------------------------#
+
+LAMBDAS = _LAMBDAS()
+
+###############################################################################
+
 from .BASE import general_utils as UTILS
 
 """
@@ -189,6 +292,8 @@ def register_consts(dict_config):
             [MODULES.add_property(name, path) for name, path in dict_config['MODULES'].items()]
         if 'OBJECTS' in dict_config:
             [OBJECTS.add_object(name, path) for name, path in dict_config['OBJECTS'].items()]
+        if 'LAMBDAS' in dict_config:
+            [LAMBDAS.add_lambda(name, path) for name, path in dict_config['LAMBDAS'].items()]
         
         UTILS.throw_msg('done', 'Comodo\'s costants correctly configured')
     except Exception as ex:

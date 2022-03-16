@@ -18,6 +18,7 @@ from .ANALYSIS import df_utils as DF
 from .ANALYSIS import plot_utils as PLOT
 from .ANALYSIS import ml_utils as ML
 from .ANALYSIS import ts_utils as TS
+from .ANALYSIS import txt_utils as TXT
 
 from .DB import sparql_utils as SPQ
 from .DB import mongo_utils as MDB
