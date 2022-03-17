@@ -215,10 +215,10 @@ def datetime_components(timestamp, scheme='dd-MM-YYYY hh:mm:ss', dt_split=' ', d
     dt_comps = DICT.merge(d_comps, t_comps) 
     return dt_comps
 
-def date_components(date, scheme='DD-MM-YYYY', d_split='-'):
+def date_components(date, scheme='dd-MM-YYYY', d_split='-'):
     comps = date.split(d_split)
     s_comps = scheme.split(d_split)
-    d_comps = { 'DD': comps[s_comps.index('DD')],
+    d_comps = { 'DD': comps[s_comps.index('dd')],
                 'MM': comps[s_comps.index('MM')],
                 'YYYY': comps[s_comps.index('YYYY')] }
     return d_comps
@@ -231,6 +231,9 @@ def time_components(time, scheme='hh:mm:ss', t_split=':'):
                     'ss': comps[s_comps.index('ss')] }
         return t_comps
     
+def today_date():
+    return to_datetime(datetime_to_str(datetime.date.today()))
+
 def date_weekday(str_date, scheme='DD-MM-YYYY', d_split='-'):
     dc = date_components(str_date, scheme=scheme, d_split=d_split)
     return datetime.date(int(dc['YYYY']), int(dc['MM']), int(dc['DD'])).weekday()

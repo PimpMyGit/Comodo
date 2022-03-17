@@ -38,10 +38,11 @@ class _PATHS:
     
     def add_path(self, name, path):
         self.__dict__[name] = path
-        if not os.path.isdir(path):
+        if type(path) is str and not os.path.isdir(path):
             self.create_path(path)
 
     def create_path(self, path):
+        path = path.replace('\\','//')
         path = path.split('//')[:-1] if len(path.split('//')) > 1 else path[:-2] if path[-2:]=='//' else path
         p = ''
         for branch in path:
