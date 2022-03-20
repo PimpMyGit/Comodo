@@ -42,7 +42,7 @@ Return as list of values
 """
 
 def lvalues(val):
-    return val if type(val) is list else [val]
+    return val if type(val) is list else list(val) if type(val) is tuple else [val]
 
 def lvalue(l):
     return l[0] if len(l)==1 else l

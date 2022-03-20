@@ -372,7 +372,7 @@ Replace multiple chars/substrings
 
 def str_replace(s, rmap):
     for k,v in rmap.items():
-        s = s.replace(k,v)
+        s = s.replace(k,str(v))
     return s
 
 """
@@ -405,7 +405,9 @@ def str_to_df(s, line_sep='\n', sep=',', headers=True):
     data = [line.split(sep) for line in s.split(line_sep)]
     return pd.DataFrame(data[1:], columns=data[0]) if headers else pd.DataFrame(data)
     
-    
+def str_format(s, args):
+    return str_replace(s, {'{'+str(ia)+'}':arg for ia,arg in enumerate(LIST.lvalues(args))})
+
 #-----------------------------------------------------------------------------#
 
 """
