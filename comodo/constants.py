@@ -38,7 +38,7 @@ class _PATHS:
     
     def add_path(self, name, path):
         self.__dict__[name] = path
-        if type(path) is str and not os.path.isdir(path):
+        if type(path) is str and (path[-2:]=='//' or path[-2:]=='\\') and not os.path.isdir(path):
             self.create_path(path)
 
     def create_path(self, path):

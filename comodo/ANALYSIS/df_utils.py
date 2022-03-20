@@ -139,8 +139,8 @@ def add_cols(df, cols, names=None, prefix=''):
 """
 Append rows
 """
-def append(df1, df2):
-    return df1.append(df2)
+def append(df1, df2, reset_index=True):
+    return pd.concat((df1,df2)).reset_index(drop=True) if reset_index else pd.concat((df1,df2))
 
 #-----------------------------------------------------------------------------#
 

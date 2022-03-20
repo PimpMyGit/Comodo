@@ -115,12 +115,11 @@ def lambda_seq(*params, lseq=[]):
     lout, lfuns = (list(lseq.keys()), list(lseq.values())) if type(lseq) is dict else ([n for n in range(len(lseq))], lseq)
     return {lo: lf(*params) for lo,lf in zip(lout,lfuns)} if lseq_type is dict else LIST.lvalue([lf(*params) for lf in lfuns])
 
-def lambda_pipe(element, lpipe):
+def lambda_pipe(element, lpipe, first_no_args=False):
     lpipe = LIST.lvalues(lpipe)
-    if len(lpipe)==1:
-        return lambda_vsafe(element, lpipe[0])
-    else:
-        return lambda_pipe(lambda_vsafe(element, lpipe[0]), lpipe[1:])
+    for i,lp in enumerate(lpipe):
+        element = lp() if i == 0 and first_no_args else lambda_vsafe(element, lp)
+    return element
 
 #-----------------------------------------------------------------------------#
 
@@ -201,6 +200,10 @@ If None
 def if_none(obj, value):
     return value if obj is None else obj
 
+def do_if(args, lambda_do, if_clause):
+    if if_clause:
+        lambda_do(*LIST.lvalues(args))
+
 #-----------------------------------------------------------------------------#
 
 """
@@ -231,8 +234,8 @@ def time_components(time, scheme='hh:mm:ss', t_split=':'):
                     'ss': comps[s_comps.index('ss')] }
         return t_comps
     
-def today_date():
-    return to_datetime(datetime_to_str(datetime.date.today()))
+def today_date(scheme="%Y-%m-%d", as_str=False):
+    return to_datetime(datetime_to_str(datetime.date.today(), scheme=scheme), scheme=scheme, as_str=as_str)
 
 def date_weekday(str_date, scheme='DD-MM-YYYY', d_split='-'):
     dc = date_components(str_date, scheme=scheme, d_split=d_split)
@@ -394,6 +397,14 @@ def start_with(s, start):
 
 def end_with(s, end):
     return s[-len(end) : ] == end
+
+def byte_to_str(byte, encoding="utf-8"):
+    return str(byte)[2:-1] if encoding==None else byte.decode(encoding)
+
+def str_to_df(s, line_sep='\n', sep=',', headers=True):
+    data = [line.split(sep) for line in s.split(line_sep)]
+    return pd.DataFrame(data[1:], columns=data[0]) if headers else pd.DataFrame(data)
+    
     
 #-----------------------------------------------------------------------------#
 

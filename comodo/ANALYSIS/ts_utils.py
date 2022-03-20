@@ -46,6 +46,22 @@ def adf_stationarity(df, ts):
         print('\t', key, ':', value)
     return adf_test
 
+
+"""
+Differenzazione semplice o stagionale
+"""
+
+def diff(l, delta, mode='simple', dropna=True):
+    l = pd.Series(l) if type(l) is not pd.Series else l
+    if mode == 'simple':
+        dl = diff(l.diff(), delta-1, 'simple', dropna) if delta>1 else l.diff()
+    elif mode == 'seasonal':
+        dl = l.diff(delta)
+    else:
+        UTILS.throw_msg('error', 'mode param must be in [\'simple\', \'seasonal\']')
+        return None
+    return dl.dropna() if dropna else dl
+
 #-----------------------------------------------------------------------------#
 
 """

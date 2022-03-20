@@ -99,19 +99,6 @@ def reshape(l, rows=None, cols=None, axis=0):
 
 #-----------------------------------------------------------------------------#
 
-def diff(l, d, mode='simple', dropna=True):
-    l = pd.Series(l) if type(l) is not pd.Series else l
-    if mode == 'simple':
-        dl = diff(l.diff(), d-1, 'simple', dropna) if d>1 else l.diff()
-    elif mode == 'seasonal':
-        dl = l.diff(d)
-    else:
-        UTILS.throw_msg('error', 'mode param must be in [\'simple\', \'seasonal\']')
-        return None
-    return dl.dropna() if dropna else dl
-
-#-----------------------------------------------------------------------------#
-
 """
 Reverse
 """
