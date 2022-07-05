@@ -200,8 +200,8 @@ If None
 def if_none(obj, value):
     return value if obj is None else obj
 
-def do_if(args, lambda_do, if_clause):
-    if if_clause:
+def do_if(args, lambda_do, clause):
+    if clause:
         lambda_do(*LIST.lvalues(args))
 
 #-----------------------------------------------------------------------------#
@@ -375,6 +375,9 @@ def str_replace(s, rmap):
         s = s.replace(k,str(v))
     return s
 
+def str_format(s, args):
+    return str_replace(s, {'{'+str(ia)+'}':arg for ia,arg in enumerate(LIST.lvalues(args))})
+
 """
 Remove multiple space and start/end spaces
 """
@@ -398,15 +401,16 @@ def start_with(s, start):
 def end_with(s, end):
     return s[-len(end) : ] == end
 
+""" 
+String conversion
+"""
+
 def byte_to_str(byte, encoding="utf-8"):
     return str(byte)[2:-1] if encoding==None else byte.decode(encoding)
 
 def str_to_df(s, line_sep='\n', sep=',', headers=True):
     data = [line.split(sep) for line in s.split(line_sep)]
     return pd.DataFrame(data[1:], columns=data[0]) if headers else pd.DataFrame(data)
-    
-def str_format(s, args):
-    return str_replace(s, {'{'+str(ia)+'}':arg for ia,arg in enumerate(LIST.lvalues(args))})
 
 #-----------------------------------------------------------------------------#
 

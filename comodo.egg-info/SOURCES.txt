@@ -13,6 +13,7 @@ comodo/ANALYSIS/df_utils.py
 comodo/ANALYSIS/ml_utils.py
 comodo/ANALYSIS/plot_utils.py
 comodo/ANALYSIS/ts_utils.py
+comodo/ANALYSIS/txt_utils.py
 comodo/BASE/__init__.py
 comodo/BASE/dict_utils.py
 comodo/BASE/general_utils.py
