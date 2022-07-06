@@ -1,12 +1,12 @@
-import shutil
-try:
-  shutil.rmtree('Comodo')
-except:
-  pass
+# import shutil
+# try:
+#   shutil.rmtree('Comodo')
+# except:
+#   pass
 
-# !git clone https://github.com/PimpMyGit/Comodo.git
-import sys
-sys.path.append('/content/comodo')
+# # !git clone https://github.com/PimpMyGit/Comodo.git
+# import sys
+# sys.path.append('/content/comodo')
 
 import re
 import os
