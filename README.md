@@ -19,4 +19,6 @@ except:
 sys.path.append('/content/comodo')
 
 !python Comodo/install_dependencies.py
+
+from Comodo.comodo.comodo import *
 ```
